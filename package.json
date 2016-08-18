@@ -1,0 +1,27 @@
+{
+  "name": "ts-collections",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "clean": "npm cache clean",
+    "typings-install": "typings install",
+    "postinstall": "npm run typings-install",
+    "deploy": "npm install && tsc && npm publish ./"
+  },
+  "devDependencies": {
+    "core-js": "^2.4.0",
+    "typescript": "~1.8.10",
+    "typings": "~1.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apoterenko/ts-collections.git"
+  },
+  "bugs": {
+    "url": "https://github.com/apoterenko/ts-collections/issues"
+  },
+  "engines": {
+    "node": ">= 4.2.1",
+    "npm": ">= 3"
+  }
+}
