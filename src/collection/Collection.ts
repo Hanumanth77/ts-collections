@@ -3,6 +3,9 @@ import {IPredicate} from '../predicate/IPredicate';
 import {IMapper} from '../mapper/IMapper';
 import {IComparator} from '../comparator/IComparator';
 
+// TODO increase capacity at runtime
+const INITIAL_CAPACITY:number = 10000;
+
 export abstract class AbstractCollection<TItem> implements ICollection<TItem> {
 
     /**
@@ -160,4 +163,14 @@ export abstract class Collection<TItem> extends AbstractCollection<TItem> {
     protected newInstance():ICollection<TItem> {
         return new (<any>this.constructor);
     }
+}
+
+for (let i = 0; i < INITIAL_CAPACITY; i++) {
+    (function (index) {
+        Object.defineProperty(Collection, index, {
+            get: function () {
+                return this.get(index);
+            }
+        })
+    })(i);
 }
