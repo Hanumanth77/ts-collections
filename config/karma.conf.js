@@ -31,7 +31,7 @@ module.exports = function(config) {
 		 * preprocess matching files before serving them to the browser
 		 * available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		 */
-		preprocessors: { './config/spec-bundle.js': ['coverage', 'webpack', 'sourcemap'] },
+		preprocessors: { './config/spec-bundle.js': ['coverage', 'webpack'] },
 
 		// Webpack Config at ./webpack.test.js
 		webpack: testWebpackConfig,
@@ -54,7 +54,7 @@ module.exports = function(config) {
 		 * possible values: 'dots', 'progress'
 		 * available reporters: https://npmjs.org/browse/keyword/karma-reporter
 		 */
-		reporters: [ 'mocha', 'coverage' ],
+		reporters: [ 'coverage' ],
 
 		// web server port
 		port: 9877,
