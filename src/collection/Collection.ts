@@ -54,7 +54,8 @@ export abstract class AbstractCollection<TItem> implements ICollection<TItem> {
 
     abstract isEmpty():boolean;
 
-    length:number;
+    length: number;             // Lodash compatibility
+    [index: number]: TItem;     // Lodash compatibility
 }
 
 export abstract class Collection<TItem> extends AbstractCollection<TItem> {

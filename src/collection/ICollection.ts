@@ -5,7 +5,8 @@ import {IIteratorFactory} from './IIteratorFactory';
 
 export interface ICollection<TItem> extends Iterable<TItem>, IIteratorFactory<TItem> {
 
-    length: number;
+    length: number;             // Lodash compatibility
+    [index: number]: TItem;     // Lodash compatibility
 
     get(index:number):TItem;
     
