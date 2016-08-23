@@ -5,7 +5,11 @@ An implementation of collections using TypeScript.
 ## Description
 
 The collections are implements basic functionality such as "sort", "filter", "map", "decorate", etc.  
-Full compatibility with the Angular2 iterators, therefore you can use them inside the Angular2 templates.
+
+## Features  
+
+1. Full compatibility with the [Angular2](https://angular.io) iterators, therefore you can use them inside the Angular2 templates.  
+2. Full compatibility with the [lodash](https://lodash.com).  
 
 ## Installation
 
@@ -15,6 +19,12 @@ npm install ts-collections --save
 ```
 
 ## Use
+
+**test.ts**
+```typescript
+let list:_.List<number> = Collections.emptyList<number>().add(100).add(50).add(200);
+console.log(_(list).min()); // 50
+```
 
 **app.ts**
 ```typescript
