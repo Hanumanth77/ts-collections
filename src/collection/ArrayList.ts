@@ -37,7 +37,8 @@ export class ArrayList<T> extends Collection<T> {
      */
     public addArray(items:Array<T>):ICollection<T> {
         this.data = this.data.concat(items);
-        return super.addArray(items);
+        this.checkAndGrowUp();
+        return this;
     }
 
     /**
