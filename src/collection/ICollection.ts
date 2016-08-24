@@ -1,15 +1,35 @@
-import {IPredicate} from "../predicate/IPredicate";
+import {IPredicate, IPredicateFunction} from "../predicate/IPredicate";
 import {IMapper} from '../mapper/IMapper';
 import {IComparator} from '../comparator/IComparator';
 import {IIteratorFactory} from './IIteratorFactory';
 
-export interface ICollection<TItem> extends Iterable<TItem>, IIteratorFactory<TItem> {
+/**
+ * Lodash compatibility
+ */
+export interface IList<TItem> {
+    length:number;
+    [index:number]:TItem;
+}
 
-    length: number;             // Lodash compatibility
-    [index: number]: TItem;     // Lodash compatibility
+export interface IArray<TItem> {
+
+    /**
+     * Compatible with an array
+     * @param predicate Predicate or function
+     */
+    filter(predicate:IPredicate<TItem>|IPredicateFunction<TItem>):ICollection<TItem>;
+
+    /**
+     * Compatible with an array
+     * @param predicate Predicate or function
+     */
+    find(predicate:IPredicate<TItem>|IPredicateFunction<TItem>):TItem;
+}
+
+export interface ICollection<TItem> extends IList<TItem>, IArray<TItem>, Iterable<TItem>, IIteratorFactory<TItem> {
 
     get(index:number):TItem;
-    
+
     add(item:TItem):ICollection<TItem>;
 
     addAll(items:ICollection<TItem>):ICollection<TItem>;
@@ -19,8 +39,6 @@ export interface ICollection<TItem> extends Iterable<TItem>, IIteratorFactory<TI
     removeAll():ICollection<TItem>;
 
     remove(item:TItem):boolean;
-    
-    filter(predicate:IPredicate<TItem>):ICollection<TItem>;
 
     sort(comparator:IComparator<TItem>):ICollection<TItem>;
 
@@ -33,8 +51,6 @@ export interface ICollection<TItem> extends Iterable<TItem>, IIteratorFactory<TI
     toArray():Array<TItem>;
 
     addArray(items:Array<TItem>):ICollection<TItem>;
-
-    find(predicate:IPredicate<TItem>):TItem;
 
     isEmpty():boolean;
 }

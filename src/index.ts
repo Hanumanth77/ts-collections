@@ -11,5 +11,5 @@ export {Comparators} from './comparator/Comparators';
 export {IComparator} from './comparator/IComparator';
 export {IMapper} from './mapper/IMapper';
 export {AlwaysTruePredicate} from './predicate/AlwaysTruePredicate';
-export {IPredicate} from './predicate/IPredicate';
+export {IPredicate, IPredicateFunction} from './predicate/IPredicate';
 export {Predicates} from './predicate/Predicates';

@@ -1,4 +1,8 @@
-export interface IPredicate<T> {
+export interface IPredicate<TItem> {
 
-    check(o:T):boolean;
+    check(o:TItem):boolean;
+}
+
+export interface IPredicateFunction<TItem> {
+    (o:TItem):boolean;
 }

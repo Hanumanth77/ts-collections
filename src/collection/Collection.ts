@@ -1,7 +1,8 @@
 import {ICollection} from './ICollection';
-import {IPredicate} from '../predicate/IPredicate';
+import {IPredicate, IPredicateFunction} from '../predicate/IPredicate';
 import {IMapper} from '../mapper/IMapper';
 import {IComparator} from '../comparator/IComparator';
+import {DefaultMapper} from '../mapper/DefaultMapper';
 
 // TODO increase capacity at runtime
 const INITIAL_CAPACITY:number = 10000;
@@ -9,6 +10,19 @@ const INITIAL_CAPACITY:number = 10000;
 export abstract class AbstractCollection<TItem> implements ICollection<TItem> {
 
     /**
+     * Lodash compatibility
+     * @override
+     */
+    length: number;
+
+    /**
+     * Lodash compatibility
+     * @override
+     */
+    [index: number]: TItem;
+
+    /**
+     * ES6 iterators compatibility
      * @override
      */
     [Symbol.iterator] = this.iterator();
@@ -40,7 +54,10 @@ export abstract class AbstractCollection<TItem> implements ICollection<TItem> {
 
     abstract sort(comparator:IComparator<TItem>):ICollection<TItem>;
 
-    abstract filter(predicate:IPredicate<TItem>):ICollection<TItem>;
+    /**
+     * Compatible with an array
+     */
+    abstract filter(predicate:IPredicate<TItem>|IPredicateFunction<TItem>):ICollection<TItem>;
 
     abstract iterate(callback:(item:TItem, index:number) => void, predicate?:IPredicate<TItem>);
 
@@ -50,12 +67,12 @@ export abstract class AbstractCollection<TItem> implements ICollection<TItem> {
 
     abstract addArray(items:Array<TItem>):ICollection<TItem>;
 
-    abstract find(predicate:IPredicate<TItem>):TItem;
+    /**
+     * Compatible with an array
+     */
+    abstract find(predicate:IPredicate<TItem>|IPredicateFunction<TItem>):TItem;
 
     abstract isEmpty():boolean;
-
-    length: number;             // Lodash compatibility
-    [index: number]: TItem;     // Lodash compatibility
 }
 
 export abstract class Collection<TItem> extends AbstractCollection<TItem> {
@@ -67,7 +84,7 @@ export abstract class Collection<TItem> extends AbstractCollection<TItem> {
     /**
      * @override
      */
-    public iterate(callback:(item:TItem, index:number) => void, predicate?:IPredicate<TItem>) {
+    public iterate(callback:(item:TItem, index:number) => void, predicate?:IPredicate<TItem>|IPredicateFunction<TItem>) {
         for (let iterator:Iterator<TItem> = this.iterator()(),
                  iteratorResult:IteratorResult<TItem> = iterator.next(),
                  index = 0;
@@ -76,7 +93,7 @@ export abstract class Collection<TItem> extends AbstractCollection<TItem> {
 
             const value:TItem = iteratorResult.value;
 
-            if (!predicate || predicate.check(value)) {
+            if (!predicate || this.isSuitable(value, predicate)) {
                 if (callback.call(this, value, index++) === false) {
                     return;
                 }
@@ -93,14 +110,13 @@ export abstract class Collection<TItem> extends AbstractCollection<TItem> {
     }
 
     /**
+     * Compatible with an array
      * @override
      */
-    public filter(predicate:IPredicate<TItem>):ICollection<TItem> {
+    public filter(predicate:IPredicate<TItem>|IPredicateFunction<TItem>):ICollection<TItem> {
         const filteredCollection:ICollection<TItem> = this.newInstance();
 
-        this.iterate((o:TItem) => {
-            filteredCollection.add(o);
-        }, predicate);
+        this.iterate((o:TItem) => filteredCollection.add(o), predicate);
         return filteredCollection;
     }
 
@@ -109,9 +125,7 @@ export abstract class Collection<TItem> extends AbstractCollection<TItem> {
      */
     public map<E>(mapper:IMapper<TItem, E>):Array<E> {
         const ids:Array<E> = [];
-        this.iterate((o:TItem) => {
-            ids.push(mapper.map(o));
-        });
+        this.iterate((item:TItem) => ids.push(mapper.map(item)));
         return ids;
     }
 
@@ -119,9 +133,7 @@ export abstract class Collection<TItem> extends AbstractCollection<TItem> {
      * @override
      */
     public toArray():Array<TItem> {
-        const ids:Array<TItem> = [];
-        this.iterate((o:TItem) => ids.push(o));
-        return ids;
+        return this.map(new DefaultMapper<TItem>());
     }
 
     /**
@@ -133,13 +145,14 @@ export abstract class Collection<TItem> extends AbstractCollection<TItem> {
     }
 
     /**
+     * Compatible with an array
      * @override
      */
-    public find(predicate:IPredicate<TItem>):TItem {
+    public find(predicate:IPredicate<TItem>|IPredicateFunction<TItem>):TItem {
         let result:TItem = null;
-        this.iterate((o:TItem) => {
-            if (predicate.check(o)) {
-                result = o;
+        this.iterate((item:TItem) => {
+            if (this.isSuitable(item, predicate)) {
+                result = item;
                 return false;
             }
             return true;
@@ -164,14 +177,23 @@ export abstract class Collection<TItem> extends AbstractCollection<TItem> {
     protected newInstance():ICollection<TItem> {
         return new (<any>this.constructor);
     }
+
+    private isSuitable(value:TItem, predicate:IPredicate<TItem>|IPredicateFunction<TItem>):boolean {
+        return typeof predicate === 'function'
+            ? (predicate as IPredicateFunction<TItem>)(value)
+            : (predicate as IPredicate<TItem>).check(value);
+    }
 }
 
-for (let i = 0; i < INITIAL_CAPACITY; i++) {
-    (function (index) {
-        Object.defineProperty(Collection, index, {
+(() => {
+    /**
+     * Lodash support. We can't define the index property at the runtime because too low performance.
+     */
+    for (let i = 0; i < INITIAL_CAPACITY; i++) {
+        ((index:number) => Object.defineProperty(Collection.prototype, index, {
             get: function () {
                 return this.get(index);
             }
-        })
-    })(i);
-}
+        }))(i);
+    }
+})();

@@ -1,3 +1,3 @@
-export interface IMapper<T, E> {
-    map(o:T):E;
+export interface IMapper<TItem, TResult> {
+    map(item:TItem):TResult;
 }

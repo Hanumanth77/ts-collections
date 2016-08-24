@@ -1,6 +1,6 @@
 import {ICollection} from './ICollection';
 import {AbstractCollection} from './Collection';
-import {IPredicate} from '../predicate/IPredicate';
+import {IPredicate, IPredicateFunction} from '../predicate/IPredicate';
 import {IComparator} from '../comparator/IComparator';
 import {IMapper} from '../mapper/IMapper';
 
@@ -53,9 +53,10 @@ export abstract class AbstractCollectionWrapper<TItem> extends AbstractCollectio
     }
 
     /**
+     * Compatible with an array
      * @override
      */
-    public filter(predicate:IPredicate<TItem>):ICollection<TItem> {
+    public filter(predicate:IPredicate<TItem>|IPredicateFunction<TItem>):ICollection<TItem> {
         return this.collection.filter(predicate);
     }
 
@@ -102,9 +103,10 @@ export abstract class AbstractCollectionWrapper<TItem> extends AbstractCollectio
     }
 
     /**
+     * Compatible with an array
      * @override
      */
-    public find(predicate:IPredicate<TItem>):TItem {
+    public find(predicate:IPredicate<TItem>|IPredicateFunction<TItem>):TItem {
         return this.collection.find(predicate);
     }
 
