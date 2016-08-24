@@ -37,7 +37,7 @@ export class ArrayList<T> extends Collection<T> {
      */
     public addArray(items:Array<T>):ICollection<T> {
         this.data = this.data.concat(items);
-        return this;
+        return super.addArray(items);
     }
 
     /**
@@ -45,7 +45,7 @@ export class ArrayList<T> extends Collection<T> {
      */
     public insert(position:number, item:T):ICollection<T> {
         this.data.splice(position, 0, item);
-        return this;
+        return super.insert(position, item);
     }
 
     /**

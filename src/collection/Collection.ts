@@ -4,22 +4,37 @@ import {IMapper} from '../mapper/IMapper';
 import {IComparator} from '../comparator/IComparator';
 import {DefaultMapper} from '../mapper/DefaultMapper';
 
-// TODO increase capacity at runtime
-const INITIAL_CAPACITY:number = 10000;
+export const INITIAL_CAPACITY:number = 10000;
+const CAPACITY_GROW_FACTOR:number = 0.05;
+
+/**
+ * Lodash support.
+ */
+function defineIndexProperties(object, start:number, end:number) {
+    for (let i = start; i < end; i++) {
+        ((index:number) => Object.defineProperty(object, index.toString(), {
+            get: function () {
+                return this.get(index);
+            }
+        }))(i);
+    }
+}
 
 export abstract class AbstractCollection<TItem> implements ICollection<TItem> {
 
-    /**
-     * Lodash compatibility
-     * @override
-     */
-    length: number;
+    private currentCapacity:number = INITIAL_CAPACITY;
 
     /**
      * Lodash compatibility
      * @override
      */
-    [index: number]: TItem;
+    length:number;
+
+    /**
+     * Lodash compatibility
+     * @override
+     */
+    [index:number]:TItem;
 
     /**
      * ES6 iterators compatibility
@@ -36,13 +51,39 @@ export abstract class AbstractCollection<TItem> implements ICollection<TItem> {
         };
     }
 
+    /**
+     * @override
+     */
+    public insert(position:number, item:TItem):ICollection<TItem> {
+        this.checkAndGrowUp();
+        return this;
+    }
+
+    /**
+     * @override
+     */
+    public addArray(items:Array<TItem>):ICollection<TItem> {
+        this.checkAndGrowUp();
+        return this;
+    }
+
+    protected checkAndGrowUp() {
+        if (this.length >= this.currentCapacity) {
+            const previousCapacity:number = this.currentCapacity;
+
+            defineIndexProperties(
+                Collection.prototype,
+                previousCapacity,
+                this.currentCapacity = previousCapacity + Math.round(this.length * CAPACITY_GROW_FACTOR)
+            )
+        }
+    }
+
     abstract getIteratorInstance():Iterator<TItem>;
 
     abstract addAll(items:ICollection<TItem>):ICollection<TItem>;
 
     abstract get(index:number):TItem;
-
-    abstract insert(position:number, item:TItem):ICollection<TItem>;
 
     abstract add(item:TItem):ICollection<TItem>;
 
@@ -64,8 +105,6 @@ export abstract class AbstractCollection<TItem> implements ICollection<TItem> {
     abstract map<E>(mapper:IMapper<TItem, E>):Array<E>;
 
     abstract toArray():Array<TItem>;
-
-    abstract addArray(items:Array<TItem>):ICollection<TItem>;
 
     /**
      * Compatible with an array
@@ -185,15 +224,4 @@ export abstract class Collection<TItem> extends AbstractCollection<TItem> {
     }
 }
 
-(() => {
-    /**
-     * Lodash support. We can't define the index property at the runtime because too low performance.
-     */
-    for (let i = 0; i < INITIAL_CAPACITY; i++) {
-        ((index:number) => Object.defineProperty(Collection.prototype, index.toString(), {
-            get: function () {
-                return this.get(index);
-            }
-        }))(i);
-    }
-})();
+(() => defineIndexProperties(Collection.prototype, 0, INITIAL_CAPACITY))();

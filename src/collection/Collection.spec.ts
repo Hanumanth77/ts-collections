@@ -1,5 +1,6 @@
 import {ICollection} from './ICollection';
 import {Collections} from './Collections';
+import {INITIAL_CAPACITY} from './Collection';
 
 describe('Collection', ()=> {
 
@@ -83,6 +84,34 @@ describe('Collection', ()=> {
 
             expect(filteredListSize).toEqual(1);
             expect(filteredDecoratedCollection.getSize()).toEqual(1);
+
+            expect(filteredDecoratedCollection[0]).toEqual(11);
+            expect(filteredDecoratedCollection[1]).toEqual(undefined);
+        });
+    });
+
+    describe('Checking group up index of the collection', ()=> {
+        it('The index should grow correctly', ()=> {
+            const list:ICollection<string> = Collections.emptyList<string>();
+
+            for (let i = 0; i < INITIAL_CAPACITY; i++) {
+                list.add("Element" + i);
+            }
+
+            expect(list[0]).toEqual("Element0");
+            expect(list[INITIAL_CAPACITY - 1]).toEqual("Element" + (INITIAL_CAPACITY - 1));
+            expect(list[INITIAL_CAPACITY]).toEqual(undefined);
+
+            const listSize:number = list.getSize(), addedSize:number = 10;
+
+            for (let i = listSize; i < listSize + addedSize; i++) {
+                list.add("Element" + i);
+            }
+
+            expect(list[INITIAL_CAPACITY]).toEqual("Element" + (INITIAL_CAPACITY));
+            expect(list[INITIAL_CAPACITY + Math.round(addedSize / 2)]).toEqual("Element" + (INITIAL_CAPACITY + Math.round(addedSize / 2)));
+            expect(list[INITIAL_CAPACITY + addedSize - 1]).toEqual("Element" + (INITIAL_CAPACITY + addedSize - 1));
+            expect(list[INITIAL_CAPACITY + addedSize]).toEqual(undefined);
         });
     });
 });
