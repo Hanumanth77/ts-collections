@@ -190,7 +190,7 @@ export abstract class Collection<TItem> extends AbstractCollection<TItem> {
      * Lodash support. We can't define the index property at the runtime because too low performance.
      */
     for (let i = 0; i < INITIAL_CAPACITY; i++) {
-        ((index:number) => Object.defineProperty(Collection.prototype, index, {
+        ((index:number) => Object.defineProperty(Collection.prototype, index.toString(), {
             get: function () {
                 return this.get(index);
             }

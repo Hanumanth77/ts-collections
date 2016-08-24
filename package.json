@@ -1,6 +1,6 @@
 {
   "name": "ts-collections",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "license": "MIT",
   "scripts": {
     "clean": "npm cache clean",
@@ -8,12 +8,7 @@
     "postinstall": "npm run typings-install",
     "deploy": "npm install && tsc && npm publish ./"
   },
-  "peerDependencies": {
-    "core-js": "^2.4.0"
-  },
   "devDependencies": {
-    "core-js": "^2.4.0",
-
     "typescript": "~1.8.10",
     "typings": "~1.3.0",
     "tslint": "^3.7.1",

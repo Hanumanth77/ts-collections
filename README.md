@@ -10,6 +10,7 @@ The collections are implements basic functionality such as "sort", "filter", "ma
 
 1. Full compatibility with the [Angular2](https://angular.io) iterators, therefore you can use them inside the Angular2 templates.  
 2. Full compatibility with the [lodash](https://lodash.com).  
+2. Full compatibility with the [ES6 iterable protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).  
 
 ## Installation
 
