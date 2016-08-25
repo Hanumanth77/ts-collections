@@ -4,13 +4,14 @@ An implementation of collections using TypeScript.
 
 ## Description
 
-The collections are implements basic functionality such as "sort", "filter", "map", "decorate", etc.  
+The collections are implements basic functionality such as "find", "sort", "filter", "map", "decorate", etc.  
 
 ## Features  
 
 1. Full compatibility with the [Angular2](https://angular.io) iterators, therefore you can use them inside the Angular2 templates.  
 2. Full compatibility with the [lodash](https://lodash.com).  
-2. Full compatibility with the [ES6 iterable protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).  
+3. Full compatibility with the [ES6 iterable protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).  
+4. Partial compatibility with the JavaScript Array (find/filter methods).  
 
 ## Installation
 
@@ -21,13 +22,34 @@ npm install ts-collections --save
 
 ## Use
 
-**test.ts**
 ```typescript
 let list:_.List<number> = Collections.emptyList<number>().add(100).add(50).add(200);
 console.log(_(list).min()); // 50
 ```
 
-**app.ts**
+**ProductsStore.ts**
+You can make the ProductsStore singleton the inheritor of collection and bind them into Angular2 template directly, then use ngFor.
+
+```typescript
+import {Injectable} from '@angular/core';
+
+import {ArrayList} from 'ts-collections';
+import {Product} from '../../model/Product';
+
+@Injectable()
+export class ProductsStore extends ArrayList<Product> {
+
+    constructor() {
+        super();
+    }
+}
+```
+
+```html
+*ngFor="let product of this.productsStore"
+```
+
+**App.ts**
 ```typescript
 import {
     ICollection,
