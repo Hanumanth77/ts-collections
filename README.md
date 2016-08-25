@@ -11,7 +11,7 @@ The collections are implements basic functionality such as "find", "sort", "filt
 1. Full compatibility with the [Angular2](https://angular.io) iterators, therefore you can use them inside the Angular2 templates.  
 2. Full compatibility with the [lodash](https://lodash.com).  
 3. Full compatibility with the [ES6 iterable protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).  
-4. Partial compatibility with the JavaScript Array (find/filter methods).  
+4. Partial compatibility with the JavaScript Array (find/filter/forEach methods).  
 
 ## Installation
 
@@ -27,7 +27,7 @@ let list:_.List<number> = Collections.emptyList<number>().add(100).add(50).add(2
 console.log(_(list).min()); // 50
 ```
 
-**ProductsStore.ts**
+**ProductsStore.ts**  
 You can make the ProductsStore singleton the inheritor of collection and bind them into Angular2 template directly, then use ngFor.
 
 ```typescript
@@ -46,7 +46,7 @@ export class ProductsStore extends ArrayList<Product> {
 ```
 
 ```html
-*ngFor="let product of this.productsStore"
+*ngFor="let product of productsStore"
 ```
 
 **App.ts**

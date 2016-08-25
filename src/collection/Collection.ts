@@ -1,4 +1,4 @@
-import {ICollection} from './ICollection';
+import {ICollection, IEachFunction} from './ICollection';
 import {IPredicate, IPredicateFunction} from '../predicate/IPredicate';
 import {IMapper} from '../mapper/IMapper';
 import {IComparator} from '../comparator/IComparator';
@@ -110,7 +110,7 @@ export abstract class AbstractCollection<TItem> implements ICollection<TItem> {
      */
     abstract filter(predicate:IPredicate<TItem>|IPredicateFunction<TItem>):ICollection<TItem>;
 
-    abstract iterate(callback:(item:TItem, index:number) => void, predicate?:IPredicate<TItem>);
+    abstract iterate(callback:IEachFunction<TItem>, predicate?:IPredicate<TItem>);
 
     abstract map<E>(mapper:IMapper<TItem, E>):Array<E>;
 
@@ -120,6 +120,11 @@ export abstract class AbstractCollection<TItem> implements ICollection<TItem> {
      * Compatible with an array
      */
     abstract find(predicate:IPredicate<TItem>|IPredicateFunction<TItem>):TItem;
+
+    /**
+     * Compatible with an array
+     */
+    abstract forEach(callback:IEachFunction<TItem>);
 
     abstract isEmpty():boolean;
 }
@@ -133,7 +138,7 @@ export abstract class Collection<TItem> extends AbstractCollection<TItem> {
     /**
      * @override
      */
-    public iterate(callback:(item:TItem, index:number) => void, predicate?:IPredicate<TItem>|IPredicateFunction<TItem>) {
+    public iterate(callback:IEachFunction<TItem>, predicate?:IPredicate<TItem>|IPredicateFunction<TItem>) {
         for (let iterator:Iterator<TItem> = this.iterator()(),
                  iteratorResult:IteratorResult<TItem> = iterator.next(),
                  index = 0;
@@ -148,6 +153,13 @@ export abstract class Collection<TItem> extends AbstractCollection<TItem> {
                 }
             }
         }
+    }
+
+    /**
+     * Compatible with an array
+     */
+    public forEach(callback:IEachFunction<TItem>) {
+        this.iterate(callback);
     }
 
     /**

@@ -1,4 +1,4 @@
-import {ICollection} from './ICollection';
+import {ICollection, IEachFunction} from './ICollection';
 import {AbstractCollection} from './Collection';
 import {IPredicate, IPredicateFunction} from '../predicate/IPredicate';
 import {IComparator} from '../comparator/IComparator';
@@ -70,7 +70,7 @@ export abstract class AbstractCollectionWrapper<TItem> extends AbstractCollectio
     /**
      * @override
      */
-    public iterate(callback:(item:TItem, index:number)=>void, predicate?:IPredicate<TItem>) {
+    public iterate(callback:IEachFunction<TItem>, predicate?:IPredicate<TItem>) {
         this.collection.iterate(callback, predicate);
     }
 

@@ -11,6 +11,10 @@ export interface IList<TItem> {
     [index:number]:TItem;
 }
 
+export interface IEachFunction<TItem> {
+    (o:TItem, index:number);
+}
+
 export interface IArray<TItem> {
 
     /**
@@ -24,6 +28,12 @@ export interface IArray<TItem> {
      * @param predicate Predicate or function
      */
     find(predicate:IPredicate<TItem>|IPredicateFunction<TItem>):TItem;
+
+    /**
+     * Compatible with an array
+     * @param callback Callback
+     */
+    forEach(callback:IEachFunction<TItem>);
 }
 
 export interface ICollection<TItem> extends IList<TItem>, IArray<TItem>, Iterable<TItem>, IIteratorFactory<TItem> {
