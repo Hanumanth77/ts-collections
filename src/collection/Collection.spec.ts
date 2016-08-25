@@ -113,5 +113,17 @@ describe('Collection', ()=> {
             expect(list[INITIAL_CAPACITY + addedSize - 1]).toEqual("Element" + (INITIAL_CAPACITY + addedSize - 1));
             expect(list[INITIAL_CAPACITY + addedSize]).toEqual(undefined);
         });
+
+        it('A very large increase in the index should process successfully', ()=> {
+            const list:ICollection<string> = Collections.emptyList<string>();
+
+            const maxSize:number = INITIAL_CAPACITY + 1000000;
+
+            for (let i = 0; i < maxSize; i++) {
+                list.add("Element" + i);
+                expect(list[i]).toEqual("Element" + i);
+            }
+            expect(list[maxSize]).toEqual(undefined);
+        });
     });
 });

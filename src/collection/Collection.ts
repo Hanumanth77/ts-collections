@@ -4,20 +4,30 @@ import {IMapper} from '../mapper/IMapper';
 import {IComparator} from '../comparator/IComparator';
 import {DefaultMapper} from '../mapper/DefaultMapper';
 
-export const INITIAL_CAPACITY:number = 10000;
-const CAPACITY_GROW_FACTOR:number = 0.05;
+const $$TS_COLLECTIONS_INITIAL_CAPACITY:string = '$$TS_COLLECTIONS_INITIAL_CAPACITY';
+const $$TS_COLLECTIONS_CAPACITY_GROW_FACTOR:string = '$$TS_COLLECTIONS_CAPACITY_GROW_FACTOR';
+
+export const INITIAL_CAPACITY:number = typeof window !== 'undefined' && window[$$TS_COLLECTIONS_INITIAL_CAPACITY]
+    ? parseInt(window[$$TS_COLLECTIONS_INITIAL_CAPACITY])
+    : 10000;
+
+export const CAPACITY_GROW_FACTOR:number = typeof window !== 'undefined' && window[$$TS_COLLECTIONS_CAPACITY_GROW_FACTOR]
+    ? parseInt(window[$$TS_COLLECTIONS_CAPACITY_GROW_FACTOR])
+    : 0.05;
 
 /**
  * Lodash support.
  */
 function defineIndexProperties(object, start:number, end:number) {
+    const properties:PropertyDescriptorMap = {} as PropertyDescriptorMap;
     for (let i = start; i < end; i++) {
-        ((index:number) => Object.defineProperty(object, index.toString(), {
+        ((index:number) => properties[index.toString()] = {
             get: function () {
                 return this.get(index);
             }
-        }))(i);
+        })(i);
     }
+    Object.defineProperties(object, properties);
 }
 
 export abstract class AbstractCollection<TItem> implements ICollection<TItem> {
@@ -68,14 +78,14 @@ export abstract class AbstractCollection<TItem> implements ICollection<TItem> {
     }
 
     protected checkAndGrowUp() {
-        if (this.length >= this.currentCapacity) {
+        if (this.length > this.currentCapacity) {
             const previousCapacity:number = this.currentCapacity;
 
             defineIndexProperties(
-                Collection.prototype,
+                this,
                 previousCapacity,
                 this.currentCapacity = previousCapacity + Math.round(this.length * CAPACITY_GROW_FACTOR)
-            )
+            );
         }
     }
 
