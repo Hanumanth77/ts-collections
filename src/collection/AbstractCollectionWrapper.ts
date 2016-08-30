@@ -111,6 +111,14 @@ export abstract class AbstractCollectionWrapper<TItem> extends AbstractCollectio
     }
 
     /**
+     * Compatible with an array
+     * @override
+     */
+    public forEach(callback:IEachFunction<TItem>) {
+        return this.collection.forEach(callback);
+    }
+
+    /**
      * @override
      */
     public isEmpty():boolean {

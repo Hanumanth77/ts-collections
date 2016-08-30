@@ -3,7 +3,7 @@ export {ArrayList} from './collection/ArrayList';
 export {AbstractCollection, Collection} from './collection/Collection';
 export {Collections} from './collection/Collections';
 export {DecoratedCollection} from './collection/DecoratedCollection';
-export {ICollection} from './collection/ICollection';
+export {ICollection, IEachFunction} from './collection/ICollection';
 export {IItemDecorator} from './collection/IItemDecorator';
 export {DefaultIterator, ArrayIterator} from './collection/Iterator';
 export {IteratorResultImpl} from './collection/IteratorResultImpl';
