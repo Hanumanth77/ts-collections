@@ -4,9 +4,9 @@
   "license": "MIT",
   "scripts": {
     "clean": "npm cache clean",
-    "typings-install": "typings install",
-    "postinstall": "npm run typings-install",
-    "deploy": "npm install && tsc && npm publish ./"
+    "typings-install": "node_modules/.bin/typings \"install\"",
+    "tsc-build": "node \"node_modules/typescript/bin/tsc\"",
+    "deploy": "npm install && npm run typings-install && npm run tsc-build && npm publish ./"
   },
   "devDependencies": {
     "typescript": "~1.8.10",
