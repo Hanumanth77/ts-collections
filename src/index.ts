@@ -1,4 +1,3 @@
-export {AbstractCollectionWrapper} from './collection/AbstractCollectionWrapper';
 export {ArrayList} from './collection/ArrayList';
 export {AbstractCollection, Collection} from './collection/Collection';
 export {Collections} from './collection/Collections';
